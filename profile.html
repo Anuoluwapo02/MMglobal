@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Account - MM Global</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f8f9fa; color: #333; line-height: 1.5; }
+        
+        /* Header */
+        .header { background: linear-gradient(135deg, #f8b2d3, #ff69b4); color: white; padding: 15px 20px; display: flex; align-items: center; position: sticky; top: 0; z-index: 100; }
+        .back-btn { font-size: 24px; margin-right: 15px; color: white; background: none; border: none; cursor: pointer; padding: 5px; }
+        .header-title { font-size: 18px; font-weight: bold; flex: 1; text-align: center; }
+        
+        /* User Info Card */
+        .user-card { background: white; margin: 20px; border-radius: 20px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); text-align: center; }
+        .user-icon { width: 60px; height: 60px; background: #f8b2d3; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-size: 24px; }
+        .phone { font-size: 20px; font-weight: bold; margin-bottom: 10px; }
+        .user-id { background: #f8b2d3; color: white; padding: 8px 15px; border-radius: 20px; font-size: 14px; display: inline-block; }
+        
+        /* Balance */
+        .balance-section { background: white; margin: 0 20px 20px; border-radius: 20px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); text-align: center; }
+        .balance-label { font-size: 16px; color: #666; margin-bottom: 10px; }
+        .balance-amount { font-size: 28px; font-weight: bold; color: #333; margin-bottom: 5px; }
+        .balance-icon { color: #f8b2d3; font-size: 20px; }
+        
+        /* List Sections */
+        .section { margin: 0 20px 20px; background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
+        .section-title { background: #f8b2d3; color: white; padding: 12px 20px; font-size: 16px; font-weight: bold; }
+        .list-item { display: flex; align-items: center; padding: 20px; border-bottom: 1px solid #eee; cursor: pointer; transition: background 0.2s; text-decoration: none; color: #333; }
+        .list-item:last-child { border-bottom: none; }
+        .list-item:hover { background: #f8f9fa; }
+        .list-icon { width: 40px; height: 40px; background: #f8b2d3; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-size: 18px; color: white; }
+        .list-text { flex: 1; font-size: 16px; }
+        .list-arrow { font-size: 18px; color: #999; }
+        
+        /* Logout Special */
+        .logout-item .list-icon { background: #ff6b9d; }
+        
+        /* Bottom Nav */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; justify-content: space-around; padding: 10px 0; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 100; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: #888; font-size: 12px; padding: 5px; }
+        .nav-item.active { color: #f8b2d3; }
+        .nav-item i { font-size: 20px; margin-bottom: 4px; }
+        .nav-active-dot { position: absolute; bottom: 5px; right: -5px; width: 12px; height: 12px; background: #f8b2d3; border-radius: 50%; }
+        
+        /* Desktop Responsiveness */
+        @media (min-width: 768px) {
+            .user-card, .balance-section, .section { margin: 20px auto; max-width: 500px; }
+            .header { padding: 20px 40px; }
+            .header-title { font-size: 20px; }
+            .list-item { padding: 25px; }
+            .bottom-nav { padding: 15px 0; }
+            .nav-item { font-size: 14px; }
+            body { padding-bottom: 100px; }
+        }
+        
+        /* Mobile Landscape */
+        @media (max-width: 480px) and (orientation: landscape) { .header { padding: 10px 15px; } }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <button class="back-btn" onclick="goBack()">←</button>
+        <h1 class="header-title">My Account</h1>
+    </header>
+
+    <!-- User Info -->
+    <div class="user-card">
+        <div class="user-icon">📊</div>
+        <div class="phone" id="userPhone">07056823562</div>
+        <div class="user-id" id="userId">SCSEM4</div>
+    </div>
+
+    <!-- Balance -->
+    <div class="balance-section">
+        <div class="balance-label">My Balance</div>
+        <div class="balance-amount" id="balanceAmount">₦1,100</div>
+        <span class="balance-icon">$</span>
+    </div>
+
+    <!-- Financial Section -->
+    <div class="section">
+        <div class="section-title">FINANCIAL</div>
+        <a href="#" class="list-item" onclick="handleClick('Withdraw')">
+            <div class="list-icon">🏦</div>
+            <div class="list-text">Withdraw</div>
+            <span class="list-arrow">></span>
+        </a>
+        <a href="#" class="list-item" onclick="handleClick('Bank Account')">
+            <div class="list-icon">🏦</div>
+            <div class="list-text">Bank Account</div>
+            <span class="list-arrow">></span>
+        </a>
+    </div>
+
+    <!-- Records Section -->
+    <div class="section">
+        <div class="section-title">RECORDS</div>
+        <a href="#" class="list-item" onclick="handleClick('Deposit Records')">
+            <div class="list-icon">↻</div>
+            <div class="list-text">Deposit Records</div>
+            <span class="list-arrow">></span>
+        </a>
+        <a href="#" class="list-item" onclick="handleClick('Withdrawal Records')">
+            <div class="list-icon">↻</div>
+            <div class="list-text">Withdrawal Records</div>
+            <span class="list-arrow">></span>
+        </a>
+        <a href="#" class="list-item" onclick="handleClick('Income Records')">
+            <div class="list-icon">📈</div>
+            <div class="list-text">Income Records</div>
+            <span class="list-arrow">></span>
+        </a>
+    </div>
+
+    <!-- Network Section -->
+    <div class="section">
+        <div class="section-title">NETWORK</div>
+        <a href="#" class="list-item" onclick="handleClick('My Team')">
+            <div class="list-icon">👥</div>
+            <div class="list-text">My Team</div>
+            <span class="list-arrow">></span>
+        </a>
+    </div>
+
+    <!-- Support Section -->
+    <div class="section">
+        <div class="section-title">SUPPORT</div>
+        <a href="#" class="list-item" onclick="joinTelegram()">
+            <div class="list-icon">📱</div>
+            <div class="list-text">Telegram Group</div>
+            <span class="list-arrow">></span>
+        </a>
+    </div>
+
+    <!-- Account Section -->
+    <div class="section">
+        <div class="section-title">ACCOUNT</div>
+        <a href="#" class="list-item" onclick="handleClick('Change Password')">
+            <div class="list-icon">🔒</div>
+            <div class="list-text">Change Password</div>
+            <span class="list-arrow">></span>
+        </a>
+        <a href="#" class="list-item logout-item" onclick="logout()">
+            <div class="list-icon">🚪</div>
+            <div class="list-text">Logout</div>
+            <span class="list-arrow">></span>
+        </a>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="dashboard.html" class="nav-item">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="#" class="nav-item" onclick="alert('Products Page')">
+            <i class="fas fa-shopping-bag"></i>
+            <span>Products</span>
+        </a>
+        <a href="#" class="nav-item" onclick="alert('Share Feature')">
+            <i class="fas fa-share-alt"></i>
+            <span>Share</span>
+        </a>
+        <a href="#" class="nav-item active" style="position: relative;">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+            <div class="nav-active-dot"></div>
+        </a>
+    </nav>
+
+    <script>
+        function goBack() { alert('Go Back to Dashboard'); window.location.href = 'dashboard.html'; }
+        function handleClick(action) { alert(`${action} (Demo - Link to ${action.replace(' ', '_').toLowerCase()}.php)`); }
+        function joinTelegram() { window.open('https://t.me/mmglobalgroup', '_blank'); }
+        function logout() { 
+            if (confirm('Logout?')) { 
+                sessionStorage.clear(); 
+                alert('Logged out!'); 
+                window.location.href = 'login.html'; 
+            } 
+        }
+        // Dynamic Load (for PHP - see below)
+        function loadUserData() {
+            // Simulate AJAX - replace with fetch('get_user.php?user_id=1')
+            document.getElementById('userPhone').textContent = '07056823562'; // From DB
+            document.getElementById('userId').textContent = 'SCSEM4'; // From DB
+        }
+        function loadBalance() {
+            // Simulate - replace with fetch('get_balance.php?user_id=1')
+            document.getElementById('balanceAmount').textContent = '₦1,100'; // From DB
+        }
+        document.addEventListener('DOMContentLoaded', () => { loadUserData(); loadBalance(); });
+    </script>
+</body>
+</html>

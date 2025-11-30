@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - MM Global</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f9;
+            padding-bottom: 80px;
+            color: #333;
+        }
+
+        /* Top Action Bar */
+        /* Top Action Bar - Colorful & Clear Icons */
+.action-bar {
+    background: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-around;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.action-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: #666;
+    font-size: 12px;
+    transition: all 0.3s;
+    padding: 8px;
+    border-radius: 12px;
+}
+
+.action-item:hover {
+    background: #f8f9fa;
+    color: #333;
+    transform: translateY(-2px);
+}
+
+.action-item i {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 6px;
+    font-size: 19px;
+    color: white;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+    transition: transform 0.2s;
+}
+
+.action-item:hover i {
+    transform: scale(1.1);
+}
+
+/* Individual Colors - Clear & Recognizable */
+.action-item.recharge i   { background: #e91e63; }  /* Pink - Add Money */
+.action-item.gift i       { background: #4caf50; }  /* Green - Gift */
+.action-item.invite i     { background: #2196f3; }  /* Blue - Share/Invite */
+.action-item.withdraw i   { background: #ff9800; }  /* Orange - Take Money */
+        /* Dashboard Content */
+        .dashboard {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .plan-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s;
+            border-left: 4px solid #157c57;
+        }
+
+        .plan-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .plan-header {
+            background: linear-gradient(135deg, #157c57, #1abc9c);
+            color: white;
+            padding: 15px 20px;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .plan-cycle {
+            font-size: 12px;
+            opacity: 0.9;
+            margin-top: 4px;
+        }
+
+        .plan-body {
+            padding: 20px;
+        }
+
+        .investment-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 15px;
+        }
+
+        .investment-amount {
+            font-size: 22px;
+            font-weight: bold;
+            margin-left: 8px;
+            color: #157c57;
+        }
+
+        .daily, .total {
+            display: flex;
+            align-items: center;
+            font-size: 15px;
+            margin-bottom: 8px;
+            color: #666;
+        }
+
+        .daily i, .total i {
+            color: #157c57;
+            margin-right: 8px;
+        }
+
+        .logo-placeholder {
+            width: 45px;
+            height: 45px;
+            background: #f0f8f0;
+            border-radius: 8px;
+            object-fit: contain;
+            margin-left: auto;
+            border: 1px dashed #157c57;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #157c57;
+        }
+
+        .invest-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #157c57, #1abc9c);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(21, 124, 87, 0.3);
+        }
+
+        .invest-btn:hover {
+            background: linear-gradient(135deg, #0f5a44, #16a085);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(21, 124, 87, 0.4);
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #888;
+            font-size: 10px;
+            transition: color 0.3s;
+        }
+
+        .nav-item.active {
+            color: #157c57;
+        }
+
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        /* Welcome Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            max-width: 340px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #aaa;
+            cursor: pointer;
+        }
+
+        .modal-logo {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 15px;
+            background: #e8f5e8;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-logo i {
+            font-size: 30px;
+            color: #157c57;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #157c57;
+        }
+
+        .bonus-list {
+            text-align: left;
+            margin: 15px 0;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .bonus-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 6px 0;
+        }
+
+        .bonus-item i {
+            color: #157c57;
+            margin-right: 10px;
+            font-size: 16px;
+        }
+
+        .telegram-btn {
+            background: linear-gradient(135deg, #157c57, #1abc9c);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            width: 100%;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 15px;
+            box-shadow: 0 4px 12px rgba(21, 124, 87, 0.3);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .cards-grid { grid-template-columns: 1fr; gap: 16px; }
+            .action-bar { padding: 12px 15px; }
+            .action-item i { width: 36px; height: 36px; font-size: 16px; }
+            .plan-header { font-size: 16px; padding: 12px 16px; }
+            .investment-amount { font-size: 20px; }
+            .modal-content { padding: 20px; }
+        }
+
+        @media (max-width: 480px) {
+            .dashboard { padding: 15px; }
+            .bottom-nav { padding: 8px 0; }
+            .nav-item { font-size: 9px; }
+            .nav-item i { font-size: 18px; }
+        }
+        .modal-overlay {
+  transition: opacity 0.4s ease;
+}
+
+    </style>
+</head>
+<body>
+
+    <!-- Top Action Bar -->
+    <div class="action-bar">
+        <a href="#" class="action-item recharge" onclick="alert('Recharge (Demo)')">
+            <i class="fas fa-plus-circle"></i>
+            <span>Recharge</span>
+        </a>
+        <a href="#" class="action-item gift" onclick="alert('Gift Code (Demo)')">
+            <i class="fas fa-gift"></i>
+            <span>Gift Code</span>
+        </a>
+        <a href="#" class="action-item invite" onclick="alert('Invite Code (Demo)')">
+            <i class="fas fa-link"></i>
+            <span>Invite Code</span>
+        </a>
+        <a href="#" class="action-item withdraw" onclick="alert('Withdraw (Demo)')">
+            <i class="fas fa-wallet"></i>
+            <span>Withdraw</span>
+        </a>
+    </div>
+
+    <!-- Dashboard Content -->
+    <div class="dashboard">
+        <div class="cards-grid">
+
+            <!-- Basic -->
+            <div class="plan-card">
+                <div class="plan-header">Basic <div class="plan-cycle">Cycle: 30 Days</div></div>
+                <div class="plan-body">
+                    <div class="investment-row"><i class="fas fa-coins"></i> <span class="investment-amount">₦3,000</span></div>
+                    <div class="daily"><i class="fas fa-arrow-right"></i> Daily: ₦500</div>
+                    <div class="total"><i class="fas fa-chart-line"></i> Total: ₦15,000</div>
+                    <div class="logo-placeholder"><i class="fas fa-image"></i></div>
+                    <button class="invest-btn" onclick="invest('Basic')">Invest Now</button>
+                </div>
+            </div>
+
+            <!-- Major -->
+            <div class="plan-card">
+                <div class="plan-header">Major <div class="plan-cycle">Cycle: 30 Days</div></div>
+                <div class="plan-body">
+                    <div class="investment-row"><i class="fas fa-coins"></i> <span class="investment-amount">₦6,000</span></div>
+                    <div class="daily"><i class="fas fa-arrow-right"></i> Daily: ₦1,000</div>
+                    <div class="total"><i class="fas fa-chart-line"></i> Total: ₦30,000</div>
+                    <div class="logo-placeholder"><i class="fas fa-image"></i></div>
+                    <button class="invest-btn" onclick="invest('Major')">Invest Now</button>
+                </div>
+            </div>
+
+            <!-- Popular -->
+            <div class="plan-card">
+                <div class="plan-header">Popular <div class="plan-cycle">Cycle: 30 Days</div></div>
+                <div class="plan-body">
+                    <div class="investment-row"><i class="fas fa-coins"></i> <span class="investment-amount">₦10,000</span></div>
+                    <div class="daily"><i class="fas fa-arrow-right"></i> Daily: ₦1,670</div>
+                    <div class="total"><i class="fas fa-chart-line"></i> Total: ₦50,100</div>
+                    <div class="logo-placeholder"><i class="fas fa-image"></i></div>
+                    <button class="invest-btn" onclick="invest('Popular')">Invest Now</button>
+                </div>
+            </div>
+
+            <!-- Solid -->
+            <div class="plan-card">
+                <div class="plan-header">Solid <div class="plan-cycle">Cycle: 30 Days</div></div>
+                <div class="plan-body">
+                    <div class="investment-row"><i class="fas fa-coins"></i> <span class="investment-amount">₦15,000</span></div>
+                    <div class="daily"><i class="fas fa-arrow-right"></i> Daily: ₦2,500</div>
+                    <div class="total"><i class="fas fa-chart-line"></i> Total: ₦75,000</div>
+                    <div class="logo-placeholder"><i class="fas fa-image"></i></div>
+                    <button class="invest-btn" onclick="invest('Solid')">Invest Now</button>
+                </div>
+            </div>
+
+            <!-- Premium -->
+            <div class="plan-card">
+                <div class="plan-header">Premium <div class="plan-cycle">Cycle: 30 Days</div></div>
+                <div class="plan-body">
+                    <div class="investment-row"><i class="fas fa-coins"></i> <span class="investment-amount">₦100,666</span></div>
+                    <div class="daily"><i class="fas fa-arrow-right"></i> Daily: ₦16,666</div>
+                    <div class="total"><i class="fas fa-chart-line"></i> Total: ₦499,980</div>
+                    <div class="logo-placeholder"><i class="fas fa-image"></i></div>
+                    <button class="invest-btn" onclick="invest('Premium')">Invest Now</button>
+                </div>
+            </div>
+
+            <!-- VIP 1 -->
+            <div class="plan-card">
+                <div class="plan-header">VIP 1 <div class="plan-cycle">Cycle: 7 Days</div></div>
+                <div class="plan-body">
+                    <div class="investment-row"><i class="fas fa-coins"></i> <span class="investment-amount">₦200,000</span></div>
+                    <div class="daily"><i class="fas fa-arrow-right"></i> Daily: ₦50,000</div>
+                    <div class="total"><i class="fas fa-chart-line"></i> Total: ₦350,000</div>
+                    <div class="logo-placeholder"><i class="fas fa-image"></i></div>
+                    <button class="invest-btn" onclick="invest('VIP 1')">Invest Now</button>
+                </div>
+            </div>
+
+            <!-- VVIP 1 -->
+            <div class="plan-card">
+                <div class="plan-header">VVIP 1 <div class="plan-cycle">Cycle: 10 Days</div></div>
+                <div class="plan-body">
+                    <div class="investment-row"><i class="fas fa-coins"></i> <span class="investment-amount">₦300,000</span></div>
+                    <div class="daily"><i class="fas fa-arrow-right"></i> Daily: ₦114,000</div>
+                    <div class="total"><i class="fas fa-chart-line"></i> Total: ₦1,140,000</div>
+                    <div class="logo-placeholder"><i class="fas fa-image"></i></div>
+                    <button class="invest-btn" onclick="invest('VVIP 1')">Invest Now</button>
+                </div>
+            </div>
+
+            <!-- VIP 2 -->
+            <div class="plan-card">
+                <div class="plan-header">VIP 2 <div class="plan-cycle">Cycle: 7 Days</div></div>
+                <div class="plan-body">
+                    <div class="investment-row"><i class="fas fa-coins"></i> <span class="investment-amount">₦500,000</span></div>
+                    <div class="daily"><i class="fas fa-arrow-right"></i> Daily: ₦125,000</div>
+                    <div class="total"><i class="fas fa-chart-line"></i> Total: ₦875,000</div>
+                    <div class="logo-placeholder"><i class="fas fa-image"></i></div>
+                    <button class="invest-btn" onclick="invest('VIP 2')">Invest Now</button>
+                </div>
+            </div>
+
+            <!-- VVIP 2 -->
+            <div class="plan-card">
+                <div class="plan-header">VVIP 2 <div class="plan-cycle">Cycle: 10 Days</div></div>
+                <div class="plan-body">
+                    <div class="investment-row"><i class="fas fa-coins"></i> <span class="investment-amount">₦500,000</span></div>
+                    <div class="daily"><i class="fas fa-arrow-right"></i> Daily: ₦190,000</div>
+                    <div class="total"><i class="fas fa-chart-line"></i> Total: ₦1,900,000</div>
+                    <div class="logo-placeholder"><i class="fas fa-image"></i></div>
+                    <button class="invest-btn" onclick="invest('VVIP 2')">Invest Now</button>
+                </div>
+            </div>
+
+            <!-- VIP 3 -->
+            <div class="plan-card">
+                <div class="plan-header">VIP 3 <div class="plan-cycle">Cycle: 7 Days</div></div>
+                <div class="plan-body">
+                    <div class="investment-row"><i class="fas fa-coins"></i> <span class="investment-amount">₦1,000,000</span></div>
+                    <div class="daily"><i class="fas fa-arrow-right"></i> Daily: ₦250,000</div>
+                    <div class="total"><i class="fas fa-chart-line"></i> Total: ₦1,750,000</div>
+                    <div class="logo-placeholder"><i class="fas fa-image"></i></div>
+                    <button class="invest-btn" onclick="invest('VIP 3')">Invest Now</button>
+                </div>
+            </div>
+
+            <!-- VVIP 3 -->
+            <div class="plan-card">
+                <div class="plan-header">VVIP 3 <div class="plan-cycle">Cycle: 10 Days</div></div>
+                <div class="plan-body">
+                    <div class="investment-row"><i class="fas fa-coins"></i> <span class="investment-amount">₦1,000,000</span></div>
+                    <div class="daily"><i class="fas fa-arrow-right"></i> Daily: ₦380,000</div>
+                    <div class="total"><i class="fas fa-chart-line"></i> Total: ₦3,800,000</div>
+                    <div class="logo-placeholder"><i class="fas fa-image"></i></div>
+                    <button class="invest-btn" onclick="invest('VVIP 3')">Invest Now</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="dashboard.html" class="nav-item active">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="product.html" class="nav-item" onclick="alert('Products Page')">
+            <i class="fas fa-shopping-bag"></i>
+            <span>Products</span>
+        </a>
+        <a href="share.html" class="nav-item" onclick="alert('Share Feature')">
+            <i class="fas fa-share-alt"></i>
+            <span>Share</span>
+        </a>
+        <a href="profile.html" class="nav-item" onclick="alert('Profile Page')">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </a>
+    </nav>
+
+           <!-- Welcome Modal -->
+    <div class="modal-overlay" id="welcomeModal">
+        <div class="modal-content">
+            <button class="close-modal" id="closeModal">X</button>
+            <div class="modal-logo">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <h3 class="modal-title">Welcome to MM Global</h3>
+            <div class="bonus-list">
+                <div class="bonus-item"><i class="fas fa-gift"></i> REFERRAL BONUS OF 25% AND 2%</div>
+                <div class="bonus-item"><i class="fas fa-star"></i> WELCOME BONUS OF N1,100</div>
+                <div class="bonus-item"><i class="fas fa-money-bill"></i> MINIMUM WITHDRAWAL N500</div>
+                <div class="bonus-item"><i class="fas fa-clock"></i> DAILY GIFT CODE: 5:30PM</div>
+                <div class="bonus-item"><i class="fas fa-percentage"></i> WITHDRAWAL CHARGES -10%</div>
+            </div>
+            <p style="font-size:12px;color:#777;margin:15px 0;">Join our official Telegram group for updates</p>
+            <button class="telegram-btn" onclick="window.open('https://t.me/mmglobalgroup','_blank')">
+                Join Telegram Group
+            </button>
+        </div>
+    </div>
+
+  
+    <!-- JavaScript -->
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const modal = document.getElementById("welcomeModal");
+        const closeBtn = document.getElementById("closeModal");
+
+        if (!modal || !closeBtn) {
+            console.error("Modal or close button not found!");
+            return;
+        }
+
+        // STEP 1: FORCE RESET (REMOVE THIS LINE AFTER FIRST TEST)
+        localStorage.removeItem("welcomeShown");  // DELETE THIS LINE AFTER TESTING
+
+        // STEP 2: Always hide first
+        modal.style.display = "none";
+
+        // STEP 3: Show ONLY if never seen
+        if (!localStorage.getItem("welcomeShown")) {
+            setTimeout(() => {
+                modal.style.display = "flex";
+                localStorage.setItem("welcomeShown", "true");
+            }, 100); // Tiny delay to avoid flicker
+        }
+
+        // Close with X
+        closeBtn.onclick = () => {
+            modal.style.display = "none";
+        };
+
+        // Close on outside click
+        modal.addEventListener("click", (e) => {
+            if (e.target === modal) {
+            modal.style.display = "none";
+            }
+        });
+    });
+
+    function invest(plan) {
+        alert(`Investing in ${plan} Plan! (Demo)`);
+    }
+</script>
+</body>
+</html>

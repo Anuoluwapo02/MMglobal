@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MM-global</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .register-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        .register-title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        .register-subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+            position: relative;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+            font-size: 14px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px 12px 70px; /* Room for lock + eye */
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #157c57;
+        }
+
+        /* Icons inside input */
+        .form-group i {
+            position: absolute;
+            top: 40px;
+            font-size: 18px;
+            color: #999;
+        }
+        .phone-icon, .lock-icon, .referral-icon {
+            left: 16px;
+        }
+        .eye-icon {
+            left: 44px; /* Right next to lock */
+            cursor: pointer;
+        }
+        .eye-icon:hover {
+            color: #555;
+        }
+
+        .validation-feedback {
+            display: none;
+            margin-top: 5px;
+            font-size: 12px;
+            padding: 4px 0;
+        }
+        .validation-feedback.valid { color: #4CAF50; }
+        .validation-feedback.invalid { color: #f44336; }
+
+        .validation-icon {
+            position: absolute;
+            right: 16px;
+            top: 40px;
+            font-size: 16px;
+            display: none;
+        }
+        .validation-icon.valid { color: #4CAF50; }
+        .validation-icon.invalid { color: #f44336; }
+
+        .create-btn {
+            width: 100%;
+            background: #157c57;
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-bottom: 20px;
+        }
+        .create-btn:hover {
+            background: #0f5a44;
+        }
+        .login-link {
+            color: #157c57;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .login-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .register-container {
+                padding: 30px 20px;
+                margin: 10px;
+            }
+            .register-title { font-size: 24px; }
+            .form-group input {
+                padding: 14px 16px 14px 75px;
+                font-size: 18px;
+            }
+            .form-group i {
+                top: 44px;
+                font-size: 20px;
+            }
+            .eye-icon {
+                left: 48px;
+            }
+            .validation-icon {
+                top: 42px;
+                font-size: 18px;
+            }
+        }
+        @media (max-width: 480px) {
+            body { padding: 10px; }
+            .register-container { padding: 25px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <h1 class="register-title">Create Account</h1>
+        <p class="register-subtitle">Join our platform today</p>
+       
+        <form  action="register.php" method="POST">
+            <div class="form-group">
+                <label for="phone">Phone number</label>
+                <i class="fas fa-phone phone-icon"></i>
+                <input type="tel" id="phone" name="phone" placeholder="+234123456789" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <i class="fas fa-lock lock-icon"></i>
+                <i class="fas fa-eye eye-icon" id="togglePassword"></i>
+                <div class="validation-icon" id="passwordIcon"></div>
+                <input type="password" id="password" name="password" placeholder="Create password" required>
+                <div class="validation-feedback" id="passwordFeedback"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <i class="fas fa-lock lock-icon"></i>
+                <i class="fas fa-eye eye-icon" id="toggleConfirm"></i>
+                <div class="validation-icon" id="confirmIcon"></div>
+                <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm password" required>
+                <div class="validation-feedback" id="confirmFeedback"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="referral">Referral Code (Optional)</label>
+                <i class="fas fa-gift referral-icon"></i>
+                <input type="text" id="referral" name="referral" placeholder="Enter referral code if any">
+            </div>
+
+            <button type="submit" class="create-btn">Create Account</button>
+        </form>
+        <p>Already have an account? <a href="login.html" class="login-link">Sign in</a></p>
+    </div>
+
+    <script>
+        // Strong password criteria
+        const passwordCriteria = [
+            { regex: /.{8,}/, message: 'At least 8 characters' },
+            { regex: /[A-Z]/, message: 'One uppercase letter' },
+            { regex: /[a-z]/, message: 'One lowercase letter' },
+            { regex: /[0-9]/, message: 'One number' },
+            { regex: /[!@#$%^&*]/, message: 'One special character (!@#$%^&*)' }
+        ];
+
+        const passwordInput = document.getElementById('password');
+        const confirmInput = document.getElementById('confirmPassword');
+        const passwordIcon = document.getElementById('passwordIcon');
+        const confirmIcon = document.getElementById('confirmIcon');
+        const passwordFeedback = document.getElementById('passwordFeedback');
+        const confirmFeedback = document.getElementById('confirmFeedback');
+        const form = document.getElementById('registerForm');
+
+        // Eye toggle for both password fields
+        document.getElementById('togglePassword').addEventListener('click', () => toggleEye(passwordInput, 'togglePassword'));
+        document.getElementById('toggleConfirm').addEventListener('click', () => toggleEye(confirmInput, 'toggleConfirm'));
+
+        function toggleEye(input, iconId) {
+            const isPassword = input.type === 'password';
+            input.type = isPassword ? 'text' : 'password';
+            const icon = document.getElementById(iconId);
+            icon.classList.toggle('fa-eye', !isPassword);
+            icon.classList.toggle('fa-eye-slash', isPassword);
+        }
+
+        // Real-time validation
+        passwordInput.addEventListener('input', validatePassword);
+        confirmInput.addEventListener('input', validateConfirm);
+
+        function validatePassword() {
+            const value = passwordInput.value;
+            let isValid = true;
+            let feedbackHtml = '';
+
+            passwordCriteria.forEach(c => {
+                const isMet = c.regex.test(value);
+                isValid = isValid && isMet;
+                const statusClass = isMet ? 'valid' : 'invalid';
+                feedbackHtml += `<div class="${statusClass}"><i class="fas fa-${isMet ? 'check' : 'times'}"></i> ${c.message}</div>`;
+            });
+
+            passwordFeedback.innerHTML = feedbackHtml;
+            passwordFeedback.style.display = value ? 'block' : 'none';
+            updateIcon(passwordIcon, isValid && value);
+        }
+
+        function validateConfirm() {
+            const password = passwordInput.value;
+            const confirm = confirmInput.value;
+            const isMatching = password === confirm && confirm !== '';
+
+            if (confirm) {
+                if (isMatching) {
+                    confirmFeedback.innerHTML = '<span class="valid"><i class="fas fa-check"></i> Passwords match</span>';
+                    confirmIcon.innerHTML = '<i class="fas fa-check"></i>';
+                    confirmIcon.className = 'validation-icon valid';
+                    confirmIcon.style.display = 'block';
+                } else {
+                    confirmFeedback.innerHTML = '<span class="invalid"><i class="fas fa-times"></i> Passwords do not match</span>';
+                    confirmIcon.innerHTML = '<i class="fas fa-times"></i>';
+                    confirmIcon.className = 'validation-icon invalid';
+                    confirmIcon.style.display = 'block';
+                }
+                confirmFeedback.style.display = 'block';
+            } else {
+                confirmFeedback.style.display = 'none';
+                confirmIcon.style.display = 'none';
+            }
+        }
+
+        function updateIcon(iconElement, isValid) {
+            if (passwordInput.value || confirmInput.value) {
+                iconElement.innerHTML = `<i class="fas fa-${isValid ? 'check' : 'times'}"></i>`;
+                iconElement.className = `validation-icon ${isValid ? 'valid' : 'invalid'}`;
+                iconElement.style.display = 'block';
+            } else {
+                iconElement.style.display = 'none';
+            }
+        }
+
+        // Form submit
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const passwordValid = passwordCriteria.every(c => c.regex.test(passwordInput.value));
+            const confirmValid = passwordInput.value === confirmInput.value;
+            if (!passwordValid || !confirmValid) {
+                alert('Please fix the password errors before submitting.');
+                return;
+            }
+            alert('Account created successfully! (Demo)');
+        });
+
+        // Phone prefix
+        document.getElementById('phone').addEventListener('input', (e) => {
+            let val = e.target.value.replace(/\D/g, '');
+            if (val && !val.startsWith('234')) val = '234' + val;
+            e.target.value = val ? '+' + val : '';
+        });
+    </script>
+</body>
+</html>

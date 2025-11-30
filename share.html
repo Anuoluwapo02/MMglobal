@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Share – MM Global</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:Arial;background:#f4f6f9;color:#333;}
+        .header{background:#157c57;color:#fff;padding:15px;display:flex;align-items:center;position:sticky;top:0;z-index:100;}
+        .back{background:none;border:none;color:#fff;font-size:20px;cursor:pointer;}
+        .title{flex:1;text-align:center;font-weight:bold;font-size:18px;}
+        .card{max-width:420px;margin:20px auto;background:#fff;border-radius:16px;padding:25px;box-shadow:0 4px 15px rgba(0,0,0,.1);}
+        .label{font-size:14px;color:#666;margin-bottom:8px;}
+        .input{width:100%;padding:14px 55px 14px 14px;border:1px solid #ddd;border-radius:10px;background:#f9f9f9;font-size:16px;}
+        .copy{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:#157c57;color:#fff;border:none;padding:8px 14px;border-radius:8px;font-size:13px;cursor:pointer;}
+        .copy.copied{background:#28a745;}
+        .desc{text-align:center;font-size:14px;color:#666;margin:20px 0;padding:12px;background:#f0f8f0;border-left:4px solid #157c57;border-radius:10px;}
+        .share-btn{width:100%;background:#157c57;color:#fff;border:none;padding:16px;border-radius:12px;font-size:16px;cursor:pointer;}
+        .toast{position:fixed;top:20px;right:20px;padding:12px 20px;border-radius:8px;color:#fff;z-index:9999;display:none;}
+        .toast.error{background:#dc3545;}
+        .toast.success{background:#28a745;}
+        .input-group{position:relative;margin-bottom:20px;}
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <button class="back" onclick="history.back()">Back</button>
+    <div class="title">Share</div>
+</div>
+
+<div class="card">
+    <h3 style="color:#157c57;margin-bottom:15px;">Invite Friends</h3>
+
+    <div class="input-group">
+        <div class="label">Your Invite Code</div>
+        <input type="text" id="refCode" class="input" readonly>
+        <button class="copy" onclick="copy('refCode')">Copy</button>
+    </div>
+
+    <div class="input-group">
+        <div class="label">Your Invite Link</div>
+        <input type="text" id="refLink" class="input" readonly>
+        <button class="copy" onclick="copy('refLink')">Copy</button>
+    </div>
+
+    <div class="desc">Share your code and earn rewards when friends join!</div>
+
+    <button class="share-btn" onclick="shareNow()">Share Now</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+    function getUserId() {
+        return localStorage.getItem('user_id') || 
+               new URLSearchParams(window.location.search).get('user_id');
+    }
+
+    async function load() {
+        const uid = getUserId();
+        if (!uid) {
+            toast("Login first!", "error");
+            setTimeout(() => location.href='login.html', 1500);
+            return;
+        }
+
+        try {
+            const res = await fetch(`get_referral.php?user_id=${uid}`);
+            const d = await res.json();
+            if (d.success) {
+                const code = d.referral_code;
+                document.getElementById('refCode').value = code;
+                document.getElementById('refLink').value = `https://top-mart.shop/register?ref=${code}`;
+                toast("Loaded!", "success");
+            } else {
+                toast(d.error || "Failed", "error");
+            }
+        } catch(e) {
+            toast("Server error", "error");
+            console.error(e);
+        }
+    }
+
+    function copy(id) {
+        const el = document.getElementById(id);
+        el.select();
+        navigator.clipboard.writeText(el.value);
+        const btn = el.nextElementSibling;
+        btn.textContent = 'Copied!';
+        btn.classList.add('copied');
+        toast("Copied!", "success");
+        setTimeout(()=>{btn.textContent='Copy';btn.classList.remove('copied');},2000);
+    }
+
+    function shareNow() {
+        const link = document.getElementById('refLink').value;
+        if (navigator.share) {
+            navigator.share({url:link, title:'Join MM Global'});
+        } else {
+            copy('refLink');
+            setTimeout(()=>alert("Share:\n"+link),600);
+        }
+    }
+
+    function toast(msg,type="success"){
+        const t=document.getElementById('toast');
+        t.textContent=msg;
+        t.className='toast '+type;
+        t.style.display='block';
+        setTimeout(()=>t.style.display='none',3000);
+    }
+
+    window.onload = load;
+</script>
+</body>
+</html>
